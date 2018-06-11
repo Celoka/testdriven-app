@@ -5,11 +5,13 @@ from project.tests.base import BaseTestCase
 from project import db
 from project.api.models import User
 
+
 def add_user(username, email):
     user = User(username=username, email=email)
     db.session.add(user)
     db.session.commit()
     return user
+
 
 class TestUserService(BaseTestCase):
     """Tests for the Users Service."""
@@ -21,7 +23,7 @@ class TestUserService(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('pong!', data['message'])
         self.assertIn('success', data['status'])
-    
+
     def test_add_user(self):
         """Ensure a new user can be added to the database."""
         with self.client:
@@ -52,7 +54,7 @@ class TestUserService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_add_user_invalid_json_keys(self):
-        """Ensure error is thrown if the JSON object does not have a username key"""
+        """Ensure error is thrown when invalid json is sent"""
         with self.client:
             response = self.client.post(
                 '/users',
@@ -109,7 +111,7 @@ class TestUserService(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
             self.assertIn('fail', data['status'])
-    
+
     def test_single_user_invalid_id(self):
         """Ensure error is thrown when an invalid is provided"""
         with self.client:
@@ -154,13 +156,14 @@ class TestUserService(BaseTestCase):
         with self.client:
             response = self.client.post(
                 '/',
-                data = dict(username='chris', email='chris@yahoo.com'),
+                data=dict(username='chris', email='chris@yahoo.com'),
                 follow_redirects=True
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn(b'<h1>All Users</h1>', response.data)
             self.assertNotIn(b'<p>No users!</p>', response.data)
             self.assertIn(b'chris', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()
