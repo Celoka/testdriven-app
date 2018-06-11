@@ -5,12 +5,14 @@ from project import db
 
 users_blueprint = Blueprint('users', __name__, template_folder='./templates')
 
+
 @users_blueprint.route('/users/ping', methods=['GET'])
 def ping_pong():
     return jsonify({
         'status': 'success',
         'message': 'pong!'
     })
+
 
 @users_blueprint.route('/users', methods=['POST'])
 def add_user():
@@ -38,6 +40,7 @@ def add_user():
         db.session.rollback()
         return jsonify(response_object), 400
 
+
 @users_blueprint.route('/users/<user_id>', methods=['GET'])
 def get_sinlge_user(user_id):
     """Get single user details"""
@@ -45,7 +48,7 @@ def get_sinlge_user(user_id):
         'status': 'fail',
         'message': 'User does not exist'
     }
-    try: 
+    try:
         user = User.query.filter_by(id=int(user_id)).first()
         if not user:
             return jsonify(response_object), 404
@@ -63,6 +66,7 @@ def get_sinlge_user(user_id):
     except ValueError:
         return jsonify(response_object), 404
 
+
 @users_blueprint.route('/users', methods=['GET'])
 def get_all_users():
     """Fetch all users"""
@@ -74,6 +78,7 @@ def get_all_users():
     }), 200
     return response_object
 
+
 @users_blueprint.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -83,4 +88,3 @@ def index():
         db.session.commit()
     users = User.query.all()
     return render_template('index.html', users=users)
-
