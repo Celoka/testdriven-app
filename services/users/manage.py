@@ -1,5 +1,5 @@
 import unittest
-import coverageu
+import coverage
 
 from flask.cli import FlaskGroup
 
