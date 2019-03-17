@@ -1,2 +1,5 @@
 __pycache__
 venv
+htmlcov
+test-app/node_modules*
+.vscode/
